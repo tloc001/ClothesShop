@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.product-details})}">
+
+    <title>Chi tiết sản phẩm</title>
+
+    
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb__links">
+                        <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                        <a href="#" id="link">Chi tiết sản phẩm</a>
+                        <span>Essential structured blazer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Product Details Section Begin -->
+    <section class="product-details">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__left product__thumb nice-scroll">
+                          
+                        <th:block th:each="detail,iter : ${details}">
+                        
+                            <a th:class="${iter.count} == 1 ? 'pt active' : 'pt'" th:href="|#product-${iter.count}|">
+                                <img th:src="${detail.image}" alt="">
+                            </a>
+                           
+                            </th:block>
+                        </div>
+                        <div class="product__details__slider__content">
+                            <div class="product__details__pic__slider owl-carousel">
+                            	<th:block th:each="detail,iter : ${details}">
+                            	     <img th:data-hash="|product-${iter.count}|" class="product__big__img" th:src="${detail.image}" alt="">                 	
+                            	</th:block>
+                            	
+                         
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <th:block th:each="item : ${infor}">
+                    <div class="product__details__text">
+                        <h3 id="name-product">[[${item[2]}]]</h3>
+                        
+                        <div class="rating ">
+                            <i class="fa fa-star"></i> <span class="turnBuy" style="font-size: large;"> Tổng lượt mua : [[${item[4]}]]</span> <br>
+                            <i class="fa fa-star"></i> <span class= "stock" style="font-size: large;">Tổng kho : [[${item[5]}]]</span>                          
+                        </div>
+                      <div class="product__details__price">
+                      <th:block th:if="${item[6]} == ${item[7]}">
+                       <div id="price-product">
+        [[${#numbers.formatDecimal(item[7], 0, 'COMMA', 0, 'POINT')}+' VND']]
+    
+    </div>
+                      </th:block>
+                        <th:block th:unless="${item[6]} == ${item[7]}">
+                       <div id="price-product">
+        [[${#numbers.formatDecimal(item[6], 0, 'COMMA', 0, 'POINT')}+' VND'+ ' - ' + ${#numbers.formatDecimal(item[7], 0, 'COMMA', 0, 'POINT')}+' VND']]
+    
+    </div>
+                      </th:block>
+   
+   <span>     <th:block th:if="${item[8]} > ${item[7]}">
+                      
+        [[${#numbers.formatDecimal(item[8], 0, 'COMMA', 0, 'POINT')}+' VND']]
+    
+   
+                      </th:block>
+</span>
+</div>
+<p>[[${item[9]}]]</p>
+
+<div class="product__details__button">
+    <div class="quantity">
+        <span>Số lượng:</span>
+        <div class="pro-qty">
+            <input type="text" id="quantity" value="1">
+        </div>
+    </div>
+    <button class="cart-btn" id="add-cart" onclick="buyNow()"><span class="icon_bag_alt"></span> Thêm</button>
+    <ul>
+        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+        <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
+    </ul>
+</div>
+<div class="product__details__widget">
+<!-- Chọn thuộc tính sản phẩm -->
+        <p class="fw-bold">Chọn thuộc tính sản phẩm:</p>
+
+   <div class="row mt-3">
+     <th:block th:each="item,iter :  ${details}">
+    <div class="col-md-4 mb-2">
+        <div th:style="${item.stock} == 0 ? 'opacity: 0.5' : '' " class="product-card">        
+            <button class="site-btn attribute-btn" 
+                th:onclick="|selectAttribute(this, ${item.id}, ${item.price}, ${item.oldprice},${item.turnbuy},${item.stock})|">
+                 <img alt="" th:src="${item.image}">
+                [[${values[iter.index]}]]</button>
+        </div>
+    </div>
+  </th:block>
+</div>
+
+</div>
+<!-- Input ẩn chứa ID sản phẩm & giá -->
+<input type="hidden" id="hiddenId" value="">
+<input type="hidden" id="hiddenPrice" value="">
+    </div>
+</th:block>
+                       
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="product__details__tab">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                                <h6>Description</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-2" role="tabpanel">
+                                <h6>Specification</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                                <h6>Reviews ( 2 )</h6>
+                                <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                    quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                    Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                    voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                                consequat massa quis enim.</p>
+                                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                    dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                    nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                                quis, sem.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="related__title">
+                        <h5>RELATED PRODUCTS</h5>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/related/rp-1.jpg">
+                            <div class="label new">New</div>
+                            <ul class="product__hover">
+                                <li><a href="/public/img/product/related/rp-1.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Buttons tweed blazer</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/related/rp-2.jpg">
+                            <ul class="product__hover">
+                                <li><a href="/public/img/product/related/rp-2.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Flowy striped skirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 49.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/related/rp-3.jpg">
+                            <div class="label stockout">out of stock</div>
+                            <ul class="product__hover">
+                                <li><a href="/public/img/product/related/rp-3.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Cotton T-Shirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic set-bg" data-setbg="/public/img/product/related/rp-4.jpg">
+                            <ul class="product__hover">
+                                <li><a href="/public/img/product/related/rp-4.jpg" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                            </ul>
+                        </div>
+                        <div class="product__item__text">
+                            <h6><a href="#">Slim striped pocket shirt</a></h6>
+                            <div class="rating">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+                            <div class="product__price">$ 59.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Details Section End -->
+</html>
+<style>
+/* Định dạng khung chứa ảnh và nút */
+.product-card {
+    width: 100%;
+    max-width: 180px; /* Định kích thước tối đa của khung */
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px; /* Bo góc nhẹ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa ảnh và nút */
+}
+
+/* Định dạng ảnh */
+.product-card img {
+    width: 100%;
+    max-width: 150px; /* Kích thước tối đa */
+    height: auto;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+/* Định dạng nút */
+.attribute-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
+.attribute-btn.active {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-color: #1e7e34 !important;
+}
+
+</style>
+<script>
+
+console.log(turnBuy); // Kiểm tra nội dung
+
+    function selectAttribute(button, productId, price,oldPrice,turnBuy,stock) {
+        let buttons = document.querySelectorAll(".attribute-btn");
+        let priceSpan = document.getElementById("price-product");
+        let hiddenPrice = document.getElementById("hiddenPrice");
+        let hiddenId = document.getElementById("hiddenId");
+        let turnBuyi = document.querySelector(".turnBuy");
+        let  stocki = document.querySelector(".stock");
+        let oldPriceSpan = document.querySelector(".product__details__price span");
+		let btn = document.getElementById("add-cart");
+        // Xóa class active trên tất cả nút trước khi chọn mới
+        buttons.forEach(btn => btn.classList.remove("active"));
+        console.log(turnBuyi); // Kiểm tra nội dung
+
+        // Thêm viền đỏ vào nút được chọn
+        button.classList.add("active");
+
+        // Cập nhật giá và ID sản phẩm vào input ẩn
+        hiddenPrice.value = price;
+        hiddenId.value = productId;
+		if (stock == 0) {
+			btn.disabled = true;
+			btn.style.opacity = 0.5;
+		}else{
+			btn.disabled = false;
+			btn.style.opacity = 1;
+		}
+        // Hiển thị giá tiền
+        priceSpan.innerHTML = `${price.toLocaleString("vi-VN").replace(/\./g, ",")} VND`;
+        turnBuyi.innerHTML = ' Tổng lượt mua : ' + turnBuy;
+        stocki.innerHTML = ' Số lượng : ' + stock;
+        if (price != oldPrice) {
+        	oldPriceSpan.innerHTML = `${oldPrice.toLocaleString("vi-VN").replace(/\./g, ",")} VND`;
+		}else{
+			oldPriceSpan.innerHTML = '';
+		}
+
+    }
+
+    function buyNow() {
+        let productId = document.getElementById("hiddenId").value;
+        let qty = document.getElementById("quantity").value;
+        if (productId) {
+            window.location.href = `/public/addCart/${productId}?quantity=${qty}`;
+        } else {
+            alert("Vui lòng chọn một thuộc tính trước khi mua!");
+        }
+    }
+</script>

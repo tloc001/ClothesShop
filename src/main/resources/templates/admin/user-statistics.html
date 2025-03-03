@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<html  th:replace="~{/admin/layout::view(~{::title},~{::.page-inner})}">
+
+<title>Xác nhận thông tin sản phẩm</title>
+<div class="page-inner">
+     <div class="card">
+     <div class="card-header">
+					<div class="d-flex align-items-center">
+						<h4 class="card-title">Thống kê User</h4>
+						
+					</div>
+				</div>
+				<div class="card-body" >
+      <div class="row">
+              <div class="col-md-12">
+                <div class="card card-round">
+                  <div class="card-header">
+                    <div class="card-head-row">
+                      <div class="card-title">User mua nhiều</div>
+                     
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container" style="min-height: 375px">
+     	<canvas id="topBillOfUsersChart"></canvas>
+                    </div>
+                    <div id="myChartLegend"></div>
+                  </div>
+                </div>
+              </div>   		
+             
+</div>
+      </div>
+</div>
+<!-- Datatables -->
+      
+</html>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        let labels = [];
+        let turnbuys = [];
+
+        /* Lấy dữ liệu từ Thymeleaf */
+        let top5HotProduct = /*[[${sumTotalBillByUser}]]*/ [];
+
+        /* Đưa dữ liệu vào mảng */
+        top5HotProduct.forEach(item => {
+            labels.push(item[0]);
+            turnbuys.push(item[1]);
+        });
+
+        /* Vẽ biểu đồ */
+        var ctx = document.getElementById('topBillOfUsersChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tổng hóa đơn (VND)',
+                    data: turnbuys,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        /*]]>*/
+    </script>

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+
+<html  th:replace="~{/admin/layout::view(~{::title},~{::.page-inner})}">
+
+<title>Quản lí thông tin User</title>
+<div class="page-inner">
+	<div
+		class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+		<div>
+			<h3 class="fw-bold mb-3">Dashboard</h3>
+			<h6 class="op-7 mb-2">Free Bootstrap 5 Admin Dashboard</h6>
+		</div>
+
+	</div>
+
+<script th:inline="javascript">
+  window.onload = function() {
+    /*<![CDATA[*/
+    var message = /*[[${message}]]*/ '';
+    if (message) {
+      alert(message); // Hoặc sử dụng SweetAlert2, Toastr để hiển thị thông báo đẹp hơn
+    }
+    /*]]>*/
+  };
+</script>
+	<div class="row">
+		<div class="col-md-12">
+			<!-- Tablessssss -->
+			<div class="card">
+				<div class="card-header">
+					<div class="d-flex align-items-center">
+						<h4 class="card-title">Quản lí User</h4>
+						<button class="btn btn-primary btn-round ms-auto"
+							data-bs-toggle="modal" data-bs-target="#addRowModal">
+							<i class="fa fa-plus"></i> Thêm User
+						</button>
+					</div>
+				</div>
+				<div class="card-body">
+					<!-- Modal -->
+					
+					
+					<div class="modal fade" id="addRowModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">
+                    <span class="fw-bold text-primary">Thêm</span> 
+                    <span class="fw-light text-secondary">User</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Fill out the form below to add a new user. All fields are required unless stated otherwise.</p>
+                <form th:object="${user}" method="post" th:action="@{/admin/users/create}">
+                    <div class="row g-3">
+                        <!-- Username -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addUsername" type="text" class="form-control" th:field="*{username}" required placeholder="Username" />
+                                <label for="addUsername">Username</label>
+                            </div>
+                        </div>
+                        <!-- Fullname -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addFullname" type="text" class="form-control" th:field="*{fullname}" required placeholder="Fullname" />
+                                <label for="addFullname">Fullname</label>
+                            </div>
+                        </div>
+                        <!-- Birthday -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addBirthday" type="date" class="form-control" th:field="*{birthday}" required placeholder="Birthday" />
+                                <label for="addBirthday">Birthday</label>
+                            </div>
+                        </div>
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addEmail" type="email" class="form-control" th:field="*{email}" required placeholder="Email" />
+                                <label for="addEmail">Email</label>
+                            </div>
+                        </div>
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addPassword" type="password" th:field="*{password}" class="form-control" required placeholder="Password" />
+                                <label for="addPassword">Password</label>
+                            </div>
+                        </div>
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addPhone" type="text" class="form-control" th:field="*{phone}" required placeholder="Phone Number" />
+                                <label for="addPhone">Phone Number</label>
+                            </div>
+                        </div>
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="addProvince" name="addProvince" class="form-select">
+                                    <option value="" selected>Select Province</option>
+                                   
+                                </select>
+                                <label for="addProvince">Province</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="addDistrict" name="addDistrict" class="form-select">
+                                    <option value="" selected>Select District</option>
+                                </select>
+                                <label for="addDistrict">District</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="addWard" name="addward" class="form-select">
+                                    <option value="" selected>Select Ward</option>
+                                </select>
+                                <label for="addWard">Ward</label>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="addAddress" name="addAddress" type="text" class="form-control" required placeholder="Specific Address" />
+                                <label for="addAddress">Specific Address</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="finalAddress" th:field="*{address}" name="finalAddress"  readonly rows="4" cols="40"  class="form-control" required placeholder="Specific Address" /></textarea>
+                                <label for="addAddress">Final Address</label>
+                            </div>
+                        </div>
+                        <!-- Role -->
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <legend class="fs-6">Role</legend>
+                                <div class="form-check">
+                                    <input  type="radio"  id="addRoleUser"  name="role" th:checked="*{role} == 'USER'" value="USER" class="form-check-input"  checked />
+                                    <label for="addRoleUser" class="form-check-label">User</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio"  id="addRoleAdmin" name="role" th:checked="*{role} == 'ADMIN'" value="ADMIN" class="form-check-input" />
+                                    <label for="addRoleAdmin" class="form-check-label">Admin</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- Enabled -->
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <legend class="fs-6">Enabled</legend>
+                                <div class="form-check">
+                                    <input type="radio" id="addEnabledTrue" th:checked="*{enabled} == true" name="enabled" value="true" class="form-check-input" checked />
+                                    <label for="addEnabledTrue" class="form-check-label">Enabled</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" id="addEnabledFalse" name="enabled" th:checked="*{enabled} == false" value="false" class="form-check-input"  />
+                                    <label for="addEnabledFalse" class="form-check-label">Disabled</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-4 border-top">
+                        <button type="submit" id="addRowButton" class="btn btn-primary">Thêm User</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+					<div class="table-responsive">
+						<table id="add-row" class="display table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Fullname</th>
+            <th>Birthday</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Create at</th>
+            <th>Update at</th>
+            <th>Address</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            <th style="width: 10%">Action</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Fullname</th>
+            <th>Birthday</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Create at</th>
+            <th>Update at</th>
+            <th>Address</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            <th>Action</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        <th:block th:each="user : ${userList}">
+            <tr>
+                <td>[[${user.username}]]</td>
+                <td>
+                    <span class="password-text" style="display: none;">[[${user.password}]]</span>
+                    <span class="password-hidden">******</span>
+                    <button type="button" class="btn btn-link btn-sm toggle-password" style="margin-left: 5px;" data-bs-toggle="tooltip" title="Toggle Password">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </td>
+                <td>[[${user.fullname}]]</td>
+                <td> [[${user.birthday == null ? 'Chưa điền' : user.birthday}]] </td>
+                <td>[[${user.email == null ? 'Chưa điền' : user.email }]]</td>
+                <td>[[${user.phone == null ? 'Chưa điền' : user.phone}]]</td>
+                <td>[[${user.createdAt}]]</td>
+                <td>[[${user.updatedAt}]]</td>
+                <td>[[${user.address == null ? 'Chưa điền' : user.address}]]</td>
+                <td>[[${user.role}]]</td>
+                <th:block th:if="${user.enabled}"><td style="color : green"> ON</td></th:block>
+                <th:block th:unless="${user.enabled}"><td style="color : red"> OFF</td></th:block>               
+                <td>
+                    <div class="form-button-action">
+                        <button class="btn btn-link btn-info"
+        data-bs-toggle="modal" data-bs-target="#editUser" th:attr="data-username=${user.username},
+                 data-password=${user.password},
+                 data-fullname=${user.fullname},
+                 data-birthday=${user.birthday},
+                 data-email=${user.email},
+                 data-phone=${user.phone},
+                 data-address=${user.address},
+                 data-role=${user.role},
+                 data-enabled=${user.enabled}">
+    <i class="fa fa-edit" ></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editUser" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title">
+                    <span class="fw-bold text-primary">Chỉnh sửa</span> 
+                    <span class="fw-light text-secondary">User</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted">Fill out the form below to add a new user. All fields are required unless stated otherwise.</p>
+                <form th:object="${editUser}" method="post" th:action="@{/admin/users/update}">
+                    <div class="row g-3">
+                        <!-- Username -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editUsername" type="text" readonly="readonly" th:field="*{username}" class="form-control"  required placeholder="Username" />
+                                <label for="editUsername">Username</label>
+                            </div>
+                        </div>
+                        <!-- Fullname -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editFullname" type="text" th:field="*{fullname}" class="form-control"  required placeholder="Fullname" />
+                                <label for="editFullname">Fullname</label>
+                            </div>
+                        </div>
+                        <!-- Birthday -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editBirthday" type="date" th:field="*{birthday}" class="form-control"   placeholder="Birthday" />
+                                <label for="editBirthday">Birthday</label>
+                            </div>
+                        </div>
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editEmail" type="email" th:field="*{email}" class="form-control"   placeholder="Email" />
+                                <label for="editEmail">Email</label>
+                            </div>
+                        </div>
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editPassword" type="password" th:field="*{password}" class="form-control" required placeholder="Password" />
+                                <label for="editPassword">Password</label>
+                            </div>
+                        </div>
+                        <!-- Phone -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editPhone" type="text" class="form-control" th:field="*{phone}"  placeholder="Phone Number" />
+                                <label for="editPhone">Phone Number</label>
+                            </div>
+                        </div>
+                        <!-- Address -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="editProvince" name="addProvince" class="form-select">
+                                    <option value="" selected>Select Province</option>
+                                   
+                                </select>
+                                <label for="addProvince">Province</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="editDistrict" name="addDistrict" class="form-select">
+                                    <option value="" selected>Select District</option>
+                                </select>
+                                <label for="addDistrict">District</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select id="editWard" name="addward" class="form-select">
+                                    <option value="" selected>Select Ward</option>
+                                </select>
+                                <label for="addWard">Ward</label>
+                            </div>
+                        </div>
+                
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input id="editAddress" name="addAddress" type="text" class="form-control"  placeholder="Specific Address" />
+                                <label for="addAddress">Specific Address</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-floating">
+                                <textarea id="editFinalAddress" th:field="*{address}" name="finalAddress"  readonly rows="4" cols="40"  class="form-control"  placeholder="Specific Address" /></textarea>
+                                <label for="editFinalAddress">Final Address</label>
+                            </div>
+                        </div>
+                        <!-- Role -->
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <legend class="fs-6">Role</legend>
+                                <div class="form-check">
+                                    <input  type="radio"  id="editRoleUser" th:checked="*{role} == 'USER'"  name="role"  value="USER" class="form-check-input"  checked />
+                                    <label for="editRoleUser" class="form-check-label">User</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio"  id="editRoleAdmin" name="role" th:checked="*{role} == 'ADMIN'" value="ADMIN" class="form-check-input" />
+                                    <label for="editRoleAdmin" class="form-check-label">Admin</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- Enabled -->
+                        <div class="col-md-6">
+                            <fieldset class="form-group">
+                                <legend class="fs-6">Enabled</legend>
+                                <div class="form-check">
+                                    <input type="radio" id="editEnabledTrue" th:checked="*{role} == true" name="enabled" value="true" class="form-check-input" checked />
+                                    <label for="editEnabledTrue" class="form-check-label">Enabled</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" id="editEnabledFalse" name="enabled" th:checked="*{role} == false"  value="false" class="form-check-input"  />
+                                    <label for="editEnabledFalse" class="form-check-label">Disabled</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-4 border-top">
+                        <button type="submit" id="addRowButton" class="btn btn-primary">Cập nhật</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+                       
+                      
+                    </div>
+                </td>
+            </tr>
+        </th:block>
+    </tbody>
+</table>
+
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</div>
+<!-- Datatables -->
+      
+</html>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+   <script >
+      $(document).ready(function () {
+        $("#basic-datatables").DataTable({});
+
+        $("#multi-filter-select").DataTable({
+          pageLength: 5,
+          initComplete: function () {
+            this.api()
+              .columns()
+              .every(function () {
+                var column = this;
+                var select = $(
+                  '<select class="form-select"><option value=""></option></select>'
+                )
+                  .appendTo($(column.footer()).empty())
+                  .on("change", function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column
+                      .search(val ? "^" + val + "$" : "", true, false)
+                      .draw();
+                  });
+
+                column
+                  .data()
+                  .unique()
+                  .sort()
+                  .each(function (d, j) {
+                    select.append(
+                      '<option value="' + d + '">' + d + "</option>"
+                    );
+                  });
+              });
+          },
+        });
+
+        // Add Row
+        $("#add-row").DataTable({
+          pageLength: 5,
+        });
+
+        var action =
+          '<td> <div class="form-button-action"> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task"> <i class="fa fa-edit"></i> </button> <button type="button" data-bs-toggle="tooltip" title="" class="btn btn-link btn-danger" data-original-title="Remove"> <i class="fa fa-times"></i> </button> </div> </td>';
+
+       
+      });
+      
+      
+      document.addEventListener("DOMContentLoaded", function () {
+          // Gắn sự kiện cho tất cả các nút toggle mật khẩu
+          document.querySelectorAll(".toggle-password").forEach(function (button) {
+              button.addEventListener("click", function () {
+                  const passwordText = this.parentElement.querySelector(".password-text");
+                  const passwordHidden = this.parentElement.querySelector(".password-hidden");
+
+                  // Thay đổi trạng thái hiển thị
+                  if (passwordText.style.display === "none") {
+                      passwordText.style.display = "inline";
+                      passwordHidden.style.display = "none";
+                      this.querySelector("i").classList.replace("fa-eye", "fa-eye-slash");
+                  } else {
+                      passwordText.style.display = "none";
+                      passwordHidden.style.display = "inline";
+                      this.querySelector("i").classList.replace("fa-eye-slash", "fa-eye");
+                  }
+              });
+          });
+      });
+      
+      
+      
+      
+      
+      
+      const editProvinceSelect = document.getElementById("editProvince");
+      const editDistrictSelect = document.getElementById("editDistrict");
+      const editWardSelect = document.getElementById("editWard");
+      const editAddressInput = document.getElementById('editAddress');
+      const editFinalAddressTextarea = document.getElementById('editFinalAddress');
+
+      axios({
+          url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+          method: "GET",
+          responseType: "application/json"
+      }).then(response => {
+          const data = response.data;
+          renderOptionsForSelect(editProvinceSelect, data, "Name", "Id");
+          
+          editProvinceSelect.onchange = () => {
+              const selectedProvince = data.find(item => item.Id === editProvinceSelect.value);
+              renderOptionsForSelect(editDistrictSelect, selectedProvince ? selectedProvince.Districts : [], "Name", "Id");
+              resetSelectOptions(editWardSelect);
+          };
+          
+          editDistrictSelect.onchange = () => {
+              const selectedProvince = data.find(item => item.Id === editProvinceSelect.value);
+              const selectedDistrict = selectedProvince?.Districts.find(item => item.Id === editDistrictSelect.value);
+              renderOptionsForSelect(editWardSelect, selectedDistrict ? selectedDistrict.Wards : [], "Name", "Id");
+          };
+      });
+
+      function renderOptionsForSelect(selectElement, data, displayKey, valueKey) {
+          resetSelectOptions(selectElement);
+          data.forEach(item => selectElement.options.add(new Option(item[displayKey], item[valueKey])));
+      }
+
+      function resetSelectOptions(selectElement) {
+          selectElement.length = 1;
+      }
+
+      [editAddressInput, editProvinceSelect, editDistrictSelect, editWardSelect].forEach(element => 
+          element.addEventListener('input', updateFinalAddressDisplay));
+      
+      function updateFinalAddressDisplay() {
+          const addressParts = [
+              editAddressInput.value,
+              editWardSelect.options[editWardSelect.selectedIndex]?.text || "",
+              editDistrictSelect.options[editDistrictSelect.selectedIndex]?.text || "",
+              editProvinceSelect.options[editProvinceSelect.selectedIndex]?.text || ""
+          ].filter(part => part && part !== "Chọn tỉnh/thành" && part !== "Chọn quận/huyện" && part !== "Chọn phường/xã");
+
+          editFinalAddressTextarea.value = addressParts.join(", ");
+      }
+
+      
+      
+      
+      
+      
+      
+
+      document.addEventListener("DOMContentLoaded", function () {
+          // Lấy tất cả các nút edit
+          const editButtons = document.querySelectorAll(".btn[data-bs-target='#editUser']");
+
+          // Gắn sự kiện click cho từng nút edit
+          editButtons.forEach(button => {
+              button.addEventListener("click", function () {
+                  // Lấy các thuộc tính data-* từ nút
+                  const username = button.getAttribute("data-username");
+                  const password = button.getAttribute("data-password");
+                  const fullname = button.getAttribute("data-fullname");
+                  const birthday = button.getAttribute("data-birthday");
+                  const email = button.getAttribute("data-email");
+                  const phone = button.getAttribute("data-phone");
+                  const address = button.getAttribute("data-address");
+                  const role = button.getAttribute("data-role");
+                  const enabled = button.getAttribute("data-enabled");
+
+                  // Điền dữ liệu vào modal
+                  document.getElementById("editUsername").value = username;
+                  document.getElementById("editPassword").value = password;
+                  document.getElementById("editFullname").value = fullname;
+                  document.getElementById("editBirthday").value = birthday;
+                  document.getElementById("editEmail").value = email;
+                  document.getElementById("editPhone").value = phone;
+                  document.getElementById("editFinalAddress").value = address;
+
+                  // Xử lý chọn role
+                  if (role === "USER") {
+                      document.getElementById("editRoleUser").checked = true;
+                  } else if (role === "ADMIN") {
+                      document.getElementById("editRoleAdmin").checked = true;
+                  }
+
+                  // Xử lý chọn enabled
+                  if (enabled === "true") {
+                      document.getElementById("editEnabledTrue").checked = true;
+                  } else {
+                      document.getElementById("editEnabledFalse").checked = true;
+                  }
+              });
+          });
+      });
+      
+    </script>
+    
+<style>
+    .form-floating .form-control, 
+    .form-floating .form-select {
+        padding-top: 1.25rem;
+        padding-bottom: 0.75rem;
+        min-height: 58px; /* Ensure consistent height */
+    }
+    .form-floating label {
+        line-height: 1.5; /* Prevent label jump */
+    }
+</style>
+   
+    
+    
+    

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.statistics})}">
+<head>
+    <title>Sản phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <span id="link">Thống kê</span>
+    
+    <section class="statistics">
+   
+        
+        
+         <h2>Thống kê đơn hàng</h2>
+
+    <canvas id="ordersByTimeChart"></canvas>
+    <canvas id="ordersByStatusChart"></canvas>
+    <canvas id="ordersByValueChart"></canvas>
+
+  
+    </section>
+
+    
+</body>
+</html>
+
+      <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lấy dữ liệu từ Thymeleaf
+            var orders = /*[[${listOrder}]]*/ [];
+            
+            // Xử lý dữ liệu
+            var ordersByDate = {};  // Đếm số đơn theo ngày
+            var ordersByStatus = {}; // Đếm số đơn theo trạng thái
+            var ordersByCustomer = {}; // Tổng tiền theo khách hàng
+            
+            orders.forEach(order => {
+                var date = new Date(order.orderDate).toLocaleDateString("vi-VN"); 
+                var status = order.status;
+                var customer = order.user.fullname || "Khách lẻ"; // Lấy tên khách hàng nếu có
+                
+                ordersByDate[date] = (ordersByDate[date] || 0) + 1;
+                ordersByStatus[status] = (ordersByStatus[status] || 0) + 1;
+                ordersByCustomer[customer] = (ordersByCustomer[customer] || 0) + order.subTotal;
+            });
+            // Chuyển dữ liệu thành mảng
+            var dateLabels = Object.keys(ordersByDate);
+            var dateData = Object.values(ordersByDate).map(value => Math.round(value));
+            
+            var statusLabels = Object.keys(ordersByStatus);
+            var statusData = Object.values(ordersByStatus);
+            
+            var customerLabels = Object.keys(ordersByCustomer);
+            var customerData = Object.values(ordersByCustomer);
+
+            // Biểu đồ đơn hàng theo thời gian
+            new Chart(document.getElementById("ordersByTimeChart"), {
+                type: "line",
+                data: {
+                    labels: dateLabels,
+                    datasets: [{
+                        label: "Số đơn hàng",
+                        data: dateData,
+                        borderColor: "rgba(75, 192, 192, 1)",
+                        backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                }
+            });
+
+            // Biểu đồ đơn hàng theo trạng thái
+            new Chart(document.getElementById("ordersByStatusChart"), {
+                type: "pie",
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusData,
+                        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+                    }]
+                }
+            });
+
+            // Biểu đồ tổng giá trị đơn hàng theo khách hàng
+            new Chart(document.getElementById("ordersByValueChart"), {
+                type: "bar",
+                data: {
+                    labels: customerLabels,
+                    datasets: [{
+                        label: "Tổng giá trị đơn hàng (VND)",
+                        data: customerData,
+                        backgroundColor: "rgba(153, 102, 255, 0.6)",
+                        borderColor: "rgba(153, 102, 255, 1)",
+                        borderWidth: 1
+                    }]
+                }
+            });
+        });
+    </script>
+
+    <style>
+        canvas {
+            max-width: 600px;
+            margin: 20px auto;
+            display: block;
+        }
+    </style>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    

@@ -1,0 +1,250 @@
+<!DOCTYPE html >
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.checkout})}">
+
+<head>
+ 
+    <title>Sản phẩm</title>
+  
+</head>
+
+                        <span id="link">Thanh toán</span>
+    <!-- Shop Section Begin -->
+      <section class="checkout">
+        <div class="container">
+            <div class="row">
+             
+            </div>
+       <form  th:object="${inforUser}"  action="/checkout/order" method="post" class="checkout-form">
+            <h2>Hóa đơn thanh toán</h2>
+            <div class="form-group">
+                <label for="fullname">Tên của bạn:</label>
+                <input type="text" id="fullname"  th:field="*{fullname}" required>                                
+            </div>
+            <div class="form-group">
+                <label for="editProvince">Tỉnh/Thành phố:</label>
+                <select id="editProvince" name="addProvince" >
+                    <option value="" selected>Chọn tỉnh/thành</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editDistrict">Quận/Huyện:</label>
+                <select id="editDistrict" name="addDistrict" >
+                    <option value="" selected>Chọn quận/huyện</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editWard">Phường/Xã:</label>
+                <select id="editWard" name="addWard" >
+                    <option value="" selected>Chọn phường/xã</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="editAddress">Địa chỉ cụ thể:</label>
+                <input type="text" id="editAddress" name="addAddress"  placeholder="Nhập địa chỉ cụ thể" >
+            </div>
+            <div class="form-group">
+                <label for="editFinalAddress">Địa chỉ cuối cùng:</label>
+                <textarea id="editFinalAddress" name="finalAddress" th:field="*{address}" readonly required="required" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="phone">Số điện thoại:</label>
+                <input type="text" th:field="*{phone}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" required>
+            </div>
+            <div class="form-group">
+                <label for="orderNotes">Ghi chú đơn hàng:</label>
+                <textarea id="orderNotes" name="notes" placeholder="Nhập ghi chú nếu có"></textarea>
+            </div>
+            <h3>Đơn hàng của bạn</h3>
+          <div class="order-summary">
+   <table>
+    <thead>
+        <tr>
+            <th>Hình ảnh</th>          
+            <th>Sản phẩm</th>
+             <th>Màu sắc</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+            <th>Thành tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="item, iter : ${selected}">    
+     	
+            <td><img th:src="${item.pvv.image}" alt="${item.pvv.product.name}" width="50">
+            
+            <input type="number" name="idCartItem" th:value="${item.id}" hidden required>
+            <input type="number"  name="idPvv" th:value="${item.pvv.id}" hidden required>
+            
+            <input type="number" name="qtyItem" th:value="${item.quantity}" hidden required>
+            <input type="number" name="totalItem" th:value="${item.total}" hidden required>
+            </td>
+            <td>[[${item.pvv.product.name}]]</td>
+          	<td>[[${values[iter.index]}]]</td>
+          	
+            
+            <td>[[${item.quantity}]]</td>
+            <td>[[${#numbers.formatDecimal(item.pvv.price, 0, 'COMMA', 0, 'POINT')}]] VND</td>
+            <td>[[${#numbers.formatDecimal(item.total, 0, 'COMMA', 0, 'POINT')}]] VND</td>  
+           
+        </tr>
+    </tbody>
+</table>
+<p><strong>Tổng:</strong> 
+    <span ><strong style="color: red"> [[${#numbers.formatDecimal(#aggregates.sum(selected.![total]), 0, 'COMMA', 0, 'POINT')}]] VND </strong></span> 
+</p>
+
+
+</div>
+
+           
+            <button type="submit" class="submit-btn">Đặt hàng</button>
+        </form>
+
+            </div>
+        </section>
+    <!-- Shop Section End -->
+
+
+
+</html>
+
+<style>
+  
+  
+    .checkout-form h2, h3 {
+        text-align: center;
+        color: #333;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        font-weight: bold;
+        display: block;
+    }
+    .form-group input, .form-group textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        background-color: #f8f9fa;
+        font-size: 16px;
+        cursor: pointer;
+        appearance: none;
+        outline: none;
+    }
+    .form-group select:hover {
+        border-color: #0056b3;
+    }
+    .form-group select:focus {
+        border-color: #0056b3;
+        box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+    }
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+th {
+    background-color: #f8f8f8;
+}
+table img {
+    border-radius: 5px;
+    width: 100px;
+    height: 100px
+}
+p {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+    .payment-method label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    .submit-btn {
+        background: red;
+        color: white;
+        padding: 10px;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+    .submit-btn:hover {
+        background: pink;
+    }
+</style>
+
+</style>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+
+<script type="text/javascript">
+const editProvinceSelect = document.getElementById("editProvince");
+const editDistrictSelect = document.getElementById("editDistrict");
+const editWardSelect = document.getElementById("editWard");
+const editAddressInput = document.getElementById('editAddress');
+const editFinalAddressTextarea = document.getElementById('editFinalAddress');
+
+axios({
+    url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+    method: "GET",
+    responseType: "application/json"
+}).then(response => {
+    const data = response.data;
+    renderOptionsForSelect(editProvinceSelect, data, "Name", "Id");
+    
+    editProvinceSelect.onchange = () => {
+        const selectedProvince = data.find(item => item.Id === editProvinceSelect.value);
+        renderOptionsForSelect(editDistrictSelect, selectedProvince ? selectedProvince.Districts : [], "Name", "Id");
+        resetSelectOptions(editWardSelect);
+    };
+    
+    editDistrictSelect.onchange = () => {
+        const selectedProvince = data.find(item => item.Id === editProvinceSelect.value);
+        const selectedDistrict = selectedProvince?.Districts.find(item => item.Id === editDistrictSelect.value);
+        renderOptionsForSelect(editWardSelect, selectedDistrict ? selectedDistrict.Wards : [], "Name", "Id");
+    };
+});
+
+function renderOptionsForSelect(selectElement, data, displayKey, valueKey) {
+    resetSelectOptions(selectElement);
+    data.forEach(item => selectElement.options.add(new Option(item[displayKey], item[valueKey])));
+}
+
+function resetSelectOptions(selectElement) {
+    selectElement.length = 1;
+}
+
+[editAddressInput, editProvinceSelect, editDistrictSelect, editWardSelect].forEach(element => 
+    element.addEventListener('input', updateFinalAddressDisplay));
+
+function updateFinalAddressDisplay() {
+    const addressParts = [
+        editAddressInput.value,
+        editWardSelect.options[editWardSelect.selectedIndex]?.text || "",
+        editDistrictSelect.options[editDistrictSelect.selectedIndex]?.text || "",
+        editProvinceSelect.options[editProvinceSelect.selectedIndex]?.text || ""
+    ].filter(part => part && part !== "Chọn tỉnh/thành" && part !== "Chọn quận/huyện" && part !== "Chọn phường/xã");
+
+    editFinalAddressTextarea.value = addressParts.join(", ");
+}
+</script>

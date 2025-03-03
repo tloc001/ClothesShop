@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<html  th:replace="~{/admin/layout::view(~{::title},~{::.page-inner})}">
+
+<title>Thông tin cơ bản sản phẩm</title>
+<div class="page-inner">
+     
+     <div class="container mt-5">
+       <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="mb-0">Thông tin cơ bản sản phẩm</h3>
+        </div>
+        <script th:inline="javascript">
+  window.onload = function() {
+    /*<![CDATA[*/
+    var message = /*[[${message}]]*/ '';
+    if (message) {
+      alert(message); // Hoặc sử dụng SweetAlert2, Toastr để hiển thị thông báo đẹp hơn
+    }
+    /*]]>*/
+  };
+</script>
+        <form th:object="${product}" id="createProduct" enctype="multipart/form-data" th:action="|/admin/products/update/${product.id}|" method="post">
+            <div class="row">
+              <div class="col-md-6">            
+                    <div class="mb-3">
+                        <label for="loaiSanPham" class="form-label">Loại sản phẩm</label>              
+                        <div  class="input-group">
+							<select class="form-select"  name="categoryy"  id="loaiSanPham">
+							<th:block th:each="item : ${listCategory}">
+                                <option th:selected="*{category} == ${item}" >[[${item.name}]]</option>
+                                </th:block>                           
+                            </select>
+                            <button type="button" class="btn btn-outline-secondary" id="btnThemLoai"
+                                data-bs-toggle="modal" data-bs-target="#modalThemLoai">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>                 
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="tenSanPham" class="form-label">Tên sản phẩm</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="tenSanPham" required="required">
+                    </div>               
+                </div>              
+            </div>
+			
+
+			 <div class="row mt-3 mb-3">             
+                <div class="col-md-12">
+                <label class="form-label">Mô tả sản phẩm :</label>
+                    <textarea rows="5" th:field="*{description}" name="desProduct"  class="form-control"></textarea>
+                </div>              
+            </div>
+
+			  <div class="row mt-3">
+      <th:block th:if="${sumStock} > 0">
+                 <div class="col-md-4">
+        <div class="mb-3">
+            <label for="giaBan" class="form-label">Trạng thái :</label>
+            <h3 style="color: green">Còn hàng</h3>
+        </div>
+    </div>
+      </th:block> 
+      <th:block th:unless="${sumStock} > 0">
+                 <div class="col-md-4">
+        <div class="mb-3">
+            <label for="giaBan" class="form-label">Trạng thái :</label>
+            <h3 style="color: red">Hết hàng</h3>
+        </div>
+    </div>
+      </th:block>  
+</div>
+<div class="row mt-3">
+ <div class="col-md-12">
+        <div class="mb-3">
+            <label for="giaBan" class="form-label">Ảnh đã chọn :</label>
+            <img alt="" class="rounded"  th:src="${product.image}" style="width: 25%">
+            <input hidden="" name="imgSaved" th:value="${product.image}">
+        </div>
+    </div> 
+    <div class="col-md-12">
+        <div class="mb-3">
+            <label  class="form-label">Hình ảnh sản phẩm:</label>
+            <input type="file"  name="imagee" class="form-control"  >
+        </div>
+    </div>   
+</div>
+
+
+          
+          	<th:block th:if="${#lists.isEmpty(product.id)}">
+            <button type="submit" class="btn btn-primary mt-5">Thêm sản phẩm</button>
+            </th:block>
+            	<th:block th:unless="${#lists.isEmpty(product.id)}">
+            <button type="submit" class="btn btn-primary mt-5">Cập nhật</button>
+            </th:block>
+        </form>
+        
+         <div class="d-flex justify-content-between align-items-center mb-3 mt-3">
+            <h3 class="mb-0">Chi tiết</h3>
+             <th:block th:if="${values.get(0)} != '' ">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Thêm sản phẩm</button>
+            </th:block>
+        </div>
+        
+   <th:block th:each="item, iter : ${listPvv}">
+    <div class="product-card mt-3 p-3 border rounded">       
+        <form th:object="${pvv}" method="post" class="row g-3" 
+              th:action="|/admin/products/updatePvv/${product.id}|" enctype="multipart/form-data">
+              
+            <div class="row mt-3 align-items-center">
+                <!-- Ảnh sản phẩm -->
+                <div class="col-md-2 text-center">
+                    <img alt="Ảnh sản phẩm" name="imagePreview" class="rounded img-fluid preview-img"
+                         th:src="${item.image}" style="width: 120px; height: 100px; cursor: pointer;">
+                    <input type="text" name="imgSaved" hidden  th:value="${item.image}">                        
+                    <input type="file" name="imagee" class="form-control file-input d-none" accept="image/*">
+                </div>
+
+                <!-- Thông tin sản phẩm -->
+                <div class="col-md-10">
+                    <div class="row g-2">
+                        <input type="hidden" name="id" th:value="${item.id}">
+                        <input type="hidden" name="sku" th:value="${item.sku}">
+
+                        <!-- Giá cũ -->
+                        <div class="col-md-3">
+                            <label class="form-label">Giá cũ:</label>
+                            <input type="number" class="form-control text-old-price" name="oldprice" th:value="${item.oldprice}">
+                        </div>
+
+                        <!-- Giá mới -->
+                        <div class="col-md-3">
+                            <label class="form-label">Giá mới:</label>
+                            <input type="number" class="form-control text-new-price" name="price" th:value="${item.price}">
+                        </div>
+
+                        <!-- Giảm giá -->
+                        <div class="col-md-3">
+                            <label class="form-label">Giảm giá:</label>
+                            <input type="text" class="form-control" name="discount" readonly 
+                                   th:value="|${#numbers.formatDecimal(100 - (item.price / item.oldprice) * 100, 1, 2)}|">
+                        </div>
+
+                        <!-- Lượt bán -->
+                        <div class="col-md-3">
+                            <label class="form-label">Lượt bán:</label>
+                            <input type="text" class="form-control" name="turnbuy" readonly th:value="${item.turnbuy}">
+                        </div>
+
+                        <!-- Tồn kho -->
+                        <div class="col-md-3">
+                            <label class="form-label">Tồn kho:</label>
+                            <input type="number" class="form-control" name="stock" th:value="${item.stock}">
+                        </div>
+
+                        <!-- Thuộc tính -->
+                        <div class="col-md-3">
+                            <label class="form-label">Thuộc tính:</label>
+                            <input type="text" class="form-control" readonly
+                                   th:value="${values.get(iter.index)} == '' ? 'Không có' : ${values.get(iter.index)}">
+                        </div>
+
+                        <!-- Trạng thái -->
+                        <div class="col-md-3">
+                            <label class="form-label">Trạng thái:</label>
+                            <h4 th:style="${item.stock} > 0 ? 'color: green' : 'color: red'"
+                                th:text="${item.stock} > 0 ? 'Còn hàng' : 'Hết hàng'"></h4>
+                        </div>
+
+                        <!-- Nút hành động -->
+                        <div class="col-md-3 d-flex align-items-end gap-2">
+                            <button type="submit" class="btn btn-primary w-100">Cập nhật</button>
+                            <button type="submit" th:formaction="|/admin/products/deletePvv/${item.id}?idPro=${product.id}|"
+                                    class="btn btn-danger w-100">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+
+   
+</div>
+
+	<!-- Modal Thêm Sản Phẩm -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+       
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm Sản Phẩm Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div  class="modal-body">
+                <form th:object="${pvv}" method="post" enctype="multipart/form-data" th:action="|/admin/products/createPvv/${product.id}|">
+                <th:block th:each="item : ${array}">
+                    <div class="mb-3">
+                        <label class="form-label">[[${item}]]</label>
+                        <input hidden="" name ="attribute" th:value="${item}"> 
+                        <input type="text" class="form-control" name="value">
+                    </div>
+                    </th:block>
+                    <div class="mb-3">
+                        <label class="form-label">Giá cũ</label>
+                        <input type="number" class="form-control text-old-price" name="oldprice">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Giá mới</label>
+                        <input type="number" class="form-control text-new-price" name="price">
+                    </div>
+                     <div class="col-md-3 mb-3">
+               <label class="form-label" > Giảm giá :</label>              
+<input type="text" class="form-control text-discount" readonly="readonly" id="discount" name="discount" 
+  >
+              </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tồn kho</label>
+                        <input type="number" class="form-control" name="stock">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh</label>
+                        <input type="file" class="form-control" name="imagee">
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-success" >Thêm</button>
+            </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+ <!-- Modal -->
+    <div class="modal fade" id="modalThemLoai" tabindex="-1" aria-labelledby="modalThemLoaiLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalThemLoaiLabel">Thêm loại sản phẩm mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="loaiSanPhamMoi" placeholder="Nhập loại sản phẩm mới">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="btnLuuLoai">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Datatables -->
+      
+</html>
+
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("form").forEach(function (form) {
+        form.addEventListener("submit", function (event) {
+            let oldPrice = parseFloat(form.querySelector(".text-old-price").value);
+            let newPrice = parseFloat(form.querySelector(".text-new-price").value);
+
+            if (isNaN(oldPrice) || isNaN(newPrice)) {
+                alert("Vui lòng nhập giá hợp lệ!");
+                event.preventDefault(); // Chặn form gửi đi
+                return;
+            }
+
+            if (oldPrice < newPrice) {
+                alert("Lỗi: Giá cũ không được nhỏ hơn giá mới!");
+                event.preventDefault(); // Chặn form gửi đi
+                return;
+            }
+        });
+    });
+});
+
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Lấy tất cả input theo `name`
+        const oldPriceInputs = document.querySelectorAll("input[name='oldprice']");
+        const newPriceInputs = document.querySelectorAll("input[name='price']");
+        const discountInputs = document.querySelectorAll("input[name='discount']");
+
+        function updateDiscount() {
+            oldPriceInputs.forEach((oldPriceInput, index) => {
+                const newPriceInput = newPriceInputs[index];
+                const discountInput = discountInputs[index];
+
+                if (!newPriceInput || !discountInput) return; // Tránh lỗi nếu không có phần tử tương ứng
+
+                const oldPrice = parseFloat(oldPriceInput.value) || 0;
+                const newPrice = parseFloat(newPriceInput.value) || 0;
+
+                if (oldPrice > 0 && newPrice > 0 && newPrice < oldPrice) {
+                    const discount = ((oldPrice - newPrice) / oldPrice) * 100;
+                    discountInput.value = discount.toFixed(2) + " %"; // Giữ 2 số thập phân
+                } else {
+                    discountInput.value = "0.00 %";
+                }
+            });
+        }
+
+        // Lặp qua tất cả input và thêm sự kiện
+        oldPriceInputs.forEach(input => input.addEventListener("input", updateDiscount));
+        newPriceInputs.forEach(input => input.addEventListener("input", updateDiscount));
+
+        // Cập nhật giá trị ban đầu
+        updateDiscount();
+    });
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".preview-img").forEach((image) => {
+            image.addEventListener("click", function () {
+                // Lấy input file trong cùng hàng với ảnh
+                const fileInput = this.closest(".row").querySelector(".file-input");
+                fileInput.click();
+            });
+        });
+
+        document.querySelectorAll(".file-input").forEach((input) => {
+            input.addEventListener("change", function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        // Lấy ảnh trong cùng hàng với input file
+                        const previewImage = this.closest(".row").querySelector(".preview-img");
+                        previewImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    });
+
+</script>
+ <script>
+        // thêm loại sản phẩmphẩm
+        const loaiSanPhamSelect = document.getElementById('loaiSanPham');
+        console.log("loại "+loaiSanPhamSelect.value)
+        const btnLuuLoai = document.getElementById('btnLuuLoai');
+        const loaiSanPhamMoiInput = document.getElementById('loaiSanPhamMoi');
+
+        btnLuuLoai.addEventListener('click', () => {
+            const loaiSanPhamMoi = loaiSanPhamMoiInput.value.trim();
+            if (loaiSanPhamMoi !== '') {
+                const newOption = document.createElement('option');
+                newOption.value = loaiSanPhamMoi.charAt(0).toUpperCase() + loaiSanPhamMoi.slice(1).replace(/\s+/g, ' ');
+                newOption.text = loaiSanPhamMoi;
+                loaiSanPhamSelect.add(newOption);
+                loaiSanPhamSelect.value = newOption.value;
+                loaiSanPhamMoiInput.value = '';
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemLoai'));
+                modal.hide();
+            }
+        });
+    </script>
+<script>
+        let sku = document.querySelector("input[name='sku']").value;
+        let oldPrice = document.querySelector("input[name='oldPrice']").value;
+        let newPrice = document.querySelector("input[name='newPrice']").value;
+        let stock = document.querySelector("input[name='stock']").value;
+
+        if (!sku || !oldPrice || !newPrice || !stock) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        let productList = document.getElementById("product-list");
+        let newRow = document.createElement("div");
+        newRow.classList.add("row", "g-3", "product-item");
+        newRow.innerHTML = `
+            <div class="col-md-2">
+                <input type="text" class="form-control" name="sku" value="${sku}" readonly>
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control text-old-price" name="oldPrice" value="${oldPrice}">
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control text-new-price" name="newPrice" value="${newPrice}">
+            </div>
+            <div class="col-md-2">
+                <input type="number" class="form-control" name="stock" value="${stock}">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-danger" onclick="removeProduct(this)">Xóa</button>
+            </div>
+        `;
+        productList.appendChild(newRow);
+
+        document.querySelector("input[name='sku']").value = "";
+        document.querySelector("input[name='oldPrice']").value = "";
+        document.querySelector("input[name='newPrice']").value = "";
+        document.querySelector("input[name='stock']").value = "";
+
+        let modal = new bootstrap.Modal(document.getElementById("addProductModal"));
+        modal.hide();
+    
+
+
+</script>
+   <style>
+        body {
+            background-color: #f8f9fa;
+        }
+       
+
+      #createProduct {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .product-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.2s ease-in-out;
+        }
+       
+        .text-old-price {
+            text-decoration: line-through;
+            color: #6c757d;
+            font-weight: bold;
+        }
+        .text-new-price {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .btn-primary, .btn-danger {
+            border-radius: 8px;
+            font-weight: bold;
+            padding: 10px;
+            margin-right: 5px;
+        }
+    </style>

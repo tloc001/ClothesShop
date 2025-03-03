@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.my-order})}">
+<head>
+    <title>Sản phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <span id="link">Thanh toán</span>
+    
+    <section class="my-order">
+        <div class="order-summary">
+            <ul class="order-list">
+                <li th:each="order : ${listOrder}" class="order-item">
+                    <div class="order-header" th:onclick="toggleDetails([[${order.id}]])">
+                        <span><strong>Mã hóa đơn:</strong> [[${order.id}]]</span>
+                        <span><strong>Ngày đặt:</strong> [[${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm:ss')}]]</span>
+                        <span><strong>Tổng:</strong> [[${#numbers.formatDecimal(order.subTotal, 0, 'COMMA', 0, 'POINT')}]] VND</span>
+                        <span><strong>Trạng thái:</strong> [[${order.status}]]</span>
+                        <i class="fa fa-chevron-down"></i>
+                    </div>
+
+                    <ul th:id="'details-' + ${order.id}" class="order-details">
+                        <li th:each="item : ${listOrderItem}" th:if="${item.order.id == order.id}" class="order-detail-item">
+                            <span><strong>Sản phẩm:</strong> [[${item.pvv.product.name}]]</span>
+                            <span><strong>Số lượng:</strong> [[${item.quantity}]]</span>
+                            <span><strong>Giá:</strong> [[${#numbers.formatDecimal(item.priceAtOrder, 0, 'COMMA', 0, 'POINT')}]] VND</span>
+                            <span><strong>Tổng:</strong> [[${#numbers.formatDecimal(item.total, 0, 'COMMA', 0, 'POINT')}]] VND</span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        
+     
+  
+    </section>
+
+    
+</body>
+</html>
+<script>
+        function toggleDetails(orderId) {
+            var details = document.getElementById("details-" + orderId);
+            var icon = details.previousElementSibling.querySelector("i");
+
+            if (details.style.display === "none" || details.style.display === "") {
+                details.style.display = "block";
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+            } else {
+                details.style.display = "none";
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+            }
+        }
+    </script>
+
+    <style>
+  .order-summary {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.order-list {
+    list-style: none;
+    padding: 0;
+}
+
+.order-item {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.order-item:hover {
+    transform: translateY(-2px);
+}
+
+.order-header {
+    background: linear-gradient(135deg, #42a5f5, #1976d2);
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 8px 8px 0 0;
+    transition: background 0.3s ease;
+}
+
+.order-header:hover {
+    background: linear-gradient(135deg, #64b5f6, #1565c0);
+}
+
+.order-header i {
+    transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+    color: white;
+}
+
+.order-details {
+    display: none;
+    padding: 10px;
+    background: #f9f9f9;
+    list-style: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.order-detail-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-detail-item:last-child {
+    border-bottom: none;
+}
+
+.order-detail-item span {
+    flex: 1;
+    text-align: left;
+}
+
+.order-detail-item strong {
+    color: #1976d2;
+}
+
+.order-header i.fa-chevron-up {
+    transform: rotate(180deg);
+}
+
+    </style>
+    

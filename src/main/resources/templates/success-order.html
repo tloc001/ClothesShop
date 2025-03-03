@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.shop-cart})}">
+
+<head>
+ 
+    <title>Đặt hàng thành công !</title>
+
+</head>
+
+<body>
+
+    <span id="link">Đặt hàng thành công !</span>
+        
+    <section class="shop-cart">
+  		 <div class="container">
+        <h1>🎉 Cảm ơn quý khách! 🎉</h1>
+        <p>Đơn hàng của quý khách đã được xác nhận.</p>
+        <p>Chúng tôi sẽ chuyển hướng trong <b>5 giây</b>...</p>
+        <p>Nếu không tự động chuyển, <a href="/public/shop">bấm vào đây</a>.</p>
+    </div>
+    </section>
+    <!-- Shop Cart Section End -->
+
+</html>
+  <style>
+   
+     
+        h1 {
+            color: #28a745;
+        }
+        p {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+    </style>
+    <script>
+        setTimeout(function() {
+            window.location.href = "http://localhost:8080/public/shop"; // Thay link đích tại đây
+        }, 5000); // 5000ms = 5s
+    </script>

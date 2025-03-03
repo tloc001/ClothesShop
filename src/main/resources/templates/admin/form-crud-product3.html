@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<html  th:replace="~{/admin/layout::view(~{::title},~{::.page-inner})}">
+
+<title>Quản lí thông tin sản phẩm</title>
+<div class="page-inner">
+       <div class="container mt-5">
+        <h1 class="mb-4">Thêm sản phẩm</h1>
+        <form id="createProduct" enctype="multipart/form-data" action="/admin/products/create/confirm" method="post">
+         
+
+
+<!-- Input nhập biến thể -->
+			   <div class="row mt-3 mb-3">
+			     <div class="col-md-6">
+            		<input  type="checkbox" id="hienThiForm" checked="checked"> <label for="hienThiForm">Bạn có muốn thêm thuộc tính ?</label>	
+            		</div>		   
+			   </div>
+
+            <div id="formThuocTinh"> 
+              <div class="row mt-3 mb-3">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="loaiThuocTinh" class="form-label">Loại thuộc tính</label>
+                    <div class="input-group">
+                      <select class="form-select loaiThuocTinh" name="attribute" id="loaiThuocTinh">
+                        <option value="Màu sắc">Màu sắc</option>
+                        <option value="Chất liệu">Chất liệu</option>
+                        <option value="Kích thước">Kích thước</option>
+                      </select>
+                      <button type="button" class="btn btn-outline-secondary btnPlus"
+                      data-bs-toggle="modal" data-bs-target="#modalThemBienThe"
+                      id="btnThemBienThe">
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="tenGiaTri" class="form-label">Giá trị</label>
+                    <input type="text" class="form-control tenGiaTri"  >
+                    <button type="button" class="mt-3 btn btn-outline-info btnXong" >
+                      Xong
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3 mb-3">
+                    <i class="bi bi-x-circle-fill"> Xóa thuộc tính</i>
+                </div>
+                <div name="cacGiaTri">
+                    <!-- chỗ fill thuộc tính -->
+                    <div class=" align-items-center mb-2 p-2" hidden  style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <input type="text" name="valueAtt" class="form-control border-0" value="-----"  style="flex: 1;">
+                        <i class="bi bi-trash3 text-danger ms-2" style="cursor: pointer;"></i>
+                      </div>                     
+                </div>
+              </div>
+              <div class="row mt-3 mb-3">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="loaiThuocTinh" class="form-label">Loại thuộc tính</label>
+                    <div class="input-group">
+                      <select class="form-select loaiThuocTinh" name="attribute" id="loaiThuocTinh">
+                        <option value="Màu sắc">Màu sắc</option>
+                        <option value="Chất liệu">Chất liệu</option>
+                        <option value="Kích thước">Kích thước</option>
+                      </select>
+                      <button type="button" class="btn btn-outline-secondary btnPlus"
+                      data-bs-toggle="modal" data-bs-target="#modalThemBienThe"
+                      id="btnThemBienThe">
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="tenGiaTri" class="form-label">Giá trị</label>
+                    <input type="text" class="form-control tenGiaTri"  >
+                    <button type="button" class="mt-3 btn btn-outline-info btnXong" >
+                      Xong
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-12 mt-3 mb-3">
+                    <i class="bi bi-x-circle-fill"> Xóa thuộc tính</i>
+                </div>
+                <div name="cacGiaTri">
+                 <!-- chỗ fill thuộc tính -->
+               		  <div class=" align-items-center mb-2 p-2"  hidden style="border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                        <input type="text" name="valueAtt" class="form-control border-0" value="-----"  style="flex: 1;">
+                        <i class="bi bi-trash3 text-danger ms-2" style="cursor: pointer;"></i>
+                      </div>  
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary mb-3" id="btnThemThuocTinh">Thêm thuộc tính</button> 
+            </div>
+
+           
+
+            <!-- Modal nhập thông tin biến thể -->
+            <div class="modal fade" id="modalThemBienThe" tabindex="-1" aria-labelledby="modalThemBienTheLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalThemBienTheLabel">Nhập biến thể sản phẩm mới</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <label for="bienTheMoi" class="form-label">Biến thể sản phẩm</label>
+                            <input type="text" class="form-control" id="bienTheMoi"
+                                placeholder="Nhập biến thể sản phẩm mới">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="button" class="btn btn-primary" id="btnLuuBienThe">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          
+            <button type="submit" class="btn btn-primary mt-5">Tiếp</button>
+        </form>
+    </div>
+</div>
+<!-- Datatables -->
+      
+</html>
+	
+
+
+ 
+  <script>
+    // thêm thuộc tính trường hợp nếu có fill từ dtb lênlên
+    function themThuocTinhOViTri() {
+        const loaiThuocTinhSelect = document.querySelectorAll('.loaiThuocTinh');
+    let btnPlusList = document.querySelectorAll(".btnPlus")
+    let indexBtnPlus ;
+        btnPlusList.forEach((btn, index) => {
+  btn.addEventListener('click', () => {
+    indexBtnPlus = parseInt(index);
+    console.log(`Bạn đã click nút ở vị trí: ${index}`);
+  });
+});
+const btnLuuBienThe = document.getElementById('btnLuuBienThe');
+const bienTheMoiInput = document.getElementById('bienTheMoi');
+
+btnLuuBienThe.addEventListener('click', () => {
+    const bienTheMoi = bienTheMoiInput.value.trim();
+
+    if (bienTheMoi !== '') {
+        // Tạo option mới cho select box
+        const newOption = document.createElement('option');
+        newOption.value = bienTheMoi.charAt(0).toUpperCase() + bienTheMoi.slice(1).replace(/\s+/g, ' ');
+        newOption.text = bienTheMoi;
+        console.log(loaiThuocTinhSelect[indexBtnPlus])
+        loaiThuocTinhSelect[indexBtnPlus].add(newOption);
+        loaiThuocTinhSelect[indexBtnPlus].value = newOption.value;
+
+        // Xóa nội dung input sau khi thêm thành công
+        bienTheMoiInput.value = '';
+
+        // Đóng modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalThemBienThe'));
+        modal.hide();
+    }
+});
+
+    }
+themThuocTinhOViTri();
+function updateButton() {
+    const existingRows = formThuocTinh.querySelectorAll('.row').length;
+      if (existingRows >= 3) {
+        btnThemThuocTinh.disabled= true;
+      }else{
+        btnThemThuocTinh.disabled= false;
+      }
+}
+
+  </script>
+  <script>
+    const hienThiFormCheckbox = document.getElementById('hienThiForm');
+    const formThuocTinh = document.getElementById('formThuocTinh');
+    const btnThemThuocTinh = document.getElementById('btnThemThuocTinh');
+    
+    // Ẩn form ban đầu
+    function checked() {
+      if (hienThiFormCheckbox.checked) {
+        const existingRows = formThuocTinh.querySelectorAll('.row').length;
+        updateButton();
+        formThuocTinh.style.display = 'block'; // Hiển thị form
+      } else {
+        formThuocTinh.style.display = 'none'; // Ẩn form
+      }
+    };
+    checked();
+    hienThiFormCheckbox.addEventListener('change', () => {
+      // kiem tra neu da fill du lieu len tu dtb
+      checked();
+    });
+    // theme event cho nut submit
+    document.getElementById('createProduct').addEventListener('submit', function (event) {
+      const existingRowsss = formThuocTinh.querySelectorAll('.row').length;
+      if (!hienThiFormCheckbox.checked) {
+          if (existingRowsss != 0) {
+          console.log("d dc")
+          const conf = confirm("Thuộc tính vẫn còn. Vẫn tiếp tục ?")
+          if (conf) {
+            removeAllFormThuocTinh();
+          }else{
+            event.preventDefault();
+          }
+        }
+        }
+    })
+    
+    // Cập nhật sự kiện cho nút "Xong" trong form ban đầu
+    const btnXong = document.querySelectorAll('.btnXong');
+    const tenGiaTriInput = document.querySelectorAll('.tenGiaTri');
+    const cacGiaTriDiv = formThuocTinh.querySelectorAll('[name="cacGiaTri"]');
+    
+    // Sự kiện cho nút "Xong"
+    const array = formThuocTinh.querySelectorAll(".row").length;
+    console.log("mangr" +array)
+    for (let index = 0; index < array; index++) {
+       
+        btnXong[index].addEventListener('click', () => {
+      const tenGiaTri = tenGiaTriInput[index].value;
+    
+      if (tenGiaTri.trim() !== '') {
+    // Tạo container chứa input và icon
+    const valueWrapper = document.createElement('div');
+    valueWrapper.classList.add('d-flex', 'align-items-center', 'mb-2', 'p-2');
+    valueWrapper.style.border = '1px solid #ddd';
+    valueWrapper.style.borderRadius = '8px';
+    valueWrapper.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+    // Tạo input hiển thị giá trị
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.classList.add('form-control', 'border-0');
+    newInput.setAttribute('name','valueAtt')
+    newInput.style.flex = '1';
+    newInput.value = tenGiaTri;
+
+    // Tạo icon thùng rác
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-trash3 text-danger ms-2';
+    icon.style.cursor = 'pointer';
+
+    // Thêm sự kiện xóa giá trị khi click vào icon
+    icon.addEventListener('click', () => {
+        cacGiaTriDiv[index].removeChild(valueWrapper);
+    });
+
+    // Thêm input và icon vào container
+    valueWrapper.appendChild(newInput);
+    valueWrapper.appendChild(icon);
+
+    // Thêm container vào div chứa các giá trị
+    cacGiaTriDiv[index].appendChild(valueWrapper);
+
+    // Xóa giá trị trong ô nhập liệu và lấy lại focus
+    tenGiaTriInput[index].value = '';
+    tenGiaTriInput[index].focus();
+}
+
+    });
+
+    }
+   
+    // Lấy tất cả các thùng rác (icon thùng rác)
+const trashIcons = document.querySelectorAll('i.bi-trash3');
+
+// Thêm sự kiện cho mỗi biểu tượng thùng rác
+trashIcons.forEach(icon => {
+  icon.addEventListener('click', function() {
+    // Xóa phần tử cha (div chứa input và icon)
+    const parentDiv = icon.closest('.d-flex');
+    if (parentDiv) {
+      parentDiv.remove();
+    }
+  });
+});
+
+function addRemoveFormThemThuocTinh() {
+        
+// Lấy tất cả các biểu tượng "Bỏ thuộc tính"
+const removeIcons = document.querySelectorAll('.bi-x-circle-fill');
+
+// Thêm sự kiện click cho mỗi biểu tượng
+removeIcons.forEach(icon => {
+  icon.addEventListener('click', function() {
+    // Lấy phần tử cha chứa toàn bộ form (div.row)
+    const parentRow = icon.closest('.row');
+    
+    if (parentRow) {
+      // Xóa phần tử row
+      parentRow.remove();
+      updateButton();
+    }
+  });
+});
+}
+addRemoveFormThemThuocTinh();
+function removeAllFormThuocTinh() {
+	const thuocTinhContainer = document.getElementById('formThuocTinh');
+	const forms = thuocTinhContainer.querySelectorAll('.row');
+	forms.forEach(form => form.remove());
+	updateButton();
+	    }    
+
+
+
+    btnThemThuocTinh.addEventListener('click', () => {
+     
+      // Tạo một 'row' mới
+      const newRow = document.createElement('div');
+      newRow.classList.add('row');
+      newRow.classList.add('mt-3')
+      newRow.classList.add('mb-3')
+    
+      // Tạo div đầu tiên cho "Loại thuộc tính"
+      const col1 = document.createElement('div');
+      col1.classList.add('col-md-6');
+      col1.innerHTML = `
+        <div class="mb-3">
+          <label for="loaiThuocTinh" class="form-label">Loại thuộc tính</label>
+          <div class="input-group">
+            <select class="form-select loaiThuocTinh" name="attribute" id="loaiThuocTinh">
+              <option value="Màu sắc">Màu sắc</option>
+              <option value="Chất liệu">Chất liệu</option>
+              <option value="Kích thước">Kích thước</option>
+            </select>
+            <button type="button" class="btn btn-outline-secondary btnPlus" id="btnThemBienThe"
+            data-bs-toggle="modal" data-bs-target="#modalThemBienThe"
+            >
+              <i class="bi bi-plus-lg"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    
+      // Tạo div thứ hai cho "Giá trị"
+      const col2 = document.createElement('div');
+      col2.classList.add('col-md-6');
+      col2.innerHTML = `
+        <div class="mb-3">
+          <label for="tenGiaTri" class="form-label">Giá trị</label>
+          <input type="text" class="form-control tenGiaTri" >
+          <button type="button" class="mt-3 btn btn-outline-info btnXong">
+            Xong
+          </button>
+        </div>
+      `;
+        // tao button xoa
+        
+      const col3 = document.createElement('div')
+        col3.setAttribute('class','col-md-12 mt-3 mb-3')
+        const i =document.createElement('i')
+        i.setAttribute('class','bi bi-x-circle-fill')
+        i.innerHTML= " Xóa thuộc tính"
+        col3.appendChild(i)
+      // Tạo div chứa các giá trị
+      const cacGiaTriDiv = document.createElement('div');
+      cacGiaTriDiv.setAttribute('name', 'cacGiaTri');
+    	
+      
+      const valueWrapper = document.createElement('div');
+      valueWrapper.classList.add('align-items-center', 'mb-2', 'p-2');
+      valueWrapper.setAttribute('hidden','true')
+      valueWrapper.style.border = '1px solid #ddd';
+      valueWrapper.style.borderRadius = '8px';
+      valueWrapper.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+      // Tạo input hiển thị giá trị
+      const newInput = document.createElement('input');
+      newInput.type = 'text';
+      newInput.classList.add('form-control', 'border-0');
+      newInput.setAttribute('name','valueAtt')
+      newInput.style.flex = '1';
+      newInput.value = "-----";
+      valueWrapper.appendChild(newInput);
+      cacGiaTriDiv.appendChild(valueWrapper)
+      
+      
+      
+      // Thêm các phần tử vào 'row' mới
+      newRow.appendChild(col1);
+      newRow.appendChild(col2);
+      newRow.appendChild(col3);
+      newRow.appendChild(cacGiaTriDiv);
+    
+      // Thêm 'row' vào formThuocTinh
+      formThuocTinh.insertBefore(newRow, btnThemThuocTinh);
+        // them add cho no
+      themThuocTinhOViTri();
+    //   them remove 
+    addRemoveFormThemThuocTinh();
+   // Thêm sự kiện cho nút "Xong" mới (dành cho các form mới)
+const newBtnXong = col2.querySelector('.btnXong');
+const newTenGiaTriInput = col2.querySelector('.tenGiaTri');
+const newCacGiaTriDiv = cacGiaTriDiv;
+
+newBtnXong.addEventListener('click', () => {
+  const tenGiaTri = newTenGiaTriInput.value.trim();
+
+  if (tenGiaTri !== '') {
+    // Tạo container chứa input và icon
+    const valueWrapper = document.createElement('div');
+    valueWrapper.classList.add('d-flex', 'align-items-center', 'mb-2', 'p-2');
+    valueWrapper.style.border = '1px solid #ddd';
+    valueWrapper.style.borderRadius = '8px';
+    valueWrapper.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+
+    // Tạo input hiển thị giá trị
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.classList.add('form-control', 'border-0');
+    newInput.setAttribute('name','valueAtt')
+    newInput.style.flex = '1';
+    newInput.value = tenGiaTri;
+
+    // Tạo icon thùng rác
+    const icon = document.createElement('i');
+    icon.className = 'bi bi-trash3 text-danger ms-2';
+    icon.style.cursor = 'pointer';
+
+    // Thêm sự kiện xóa giá trị khi click vào icon
+    icon.addEventListener('click', () => {
+      newCacGiaTriDiv.removeChild(valueWrapper);
+    });
+
+    // Thêm input và icon vào container
+    valueWrapper.appendChild(newInput);
+    valueWrapper.appendChild(icon);
+
+    // Thêm container vào div chứa các giá trị
+    newCacGiaTriDiv.appendChild(valueWrapper);
+
+    // Xóa giá trị trong ô nhập liệu và lấy lại focus
+    newTenGiaTriInput.value = '';
+    newTenGiaTriInput.focus();
+  }
+});
+
+ // Kiểm tra số lượng form đã có
+    updateButton();
+
+ 
+    });
+    </script> 
+    
+  <style>
+        body {
+            background-color: #f4f4f4;
+        }
+
+      .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+      .form-label {
+            font-weight: 1000;
+            font-size: xx-large;
+        }
+
+      .form-control,
+      .form-select {
+            border: 1px solid #ced4da;
+            box-shadow: none;
+        }
+
+      .form-control:focus,
+      .form-select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255,.25);
+        }
+
+      .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+      .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+      .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+      .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        #formThuocTinh {
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            background-color: #f9f9f9;
+        }
+
+      .thuocTinhItem {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+      .thuocTinhItem:last-child {
+            border-bottom: none;
+        }
+
+      .input-group>.btn {
+            margin-left: 5px;
+        }
+
+      .btnPlus,
+      .btnXong {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+      .bi-x-circle-fill {
+            color: #dc3545;
+            cursor: pointer;
+        }
+
+      .modal-content {
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+      .modal-header {
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+   
+    
+    
+    

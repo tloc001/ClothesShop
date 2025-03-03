@@ -1,0 +1,115 @@
+<!DOCTYPE html >
+<html th:replace="~{/layout::view(~{::title},~{::#link},~{::.shop})}">
+
+<head>
+ 
+    <title>Sản phẩm</title>
+  
+</head>
+
+                        <span id="link">Sản phẩm</span>
+    <!-- Shop Section Begin -->
+    <section class="shop">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3">
+                    <div class="shop__sidebar">
+                        <div class="sidebar__categories">
+                            <div class="section-title">
+                                <h4>Sản phẩm</h4>
+                            </div>
+                            <div class="categories__accordion">
+                                <div class="accordion" id="accordionExample">
+                                    <div class="card">
+                                        <div class="card-heading active">
+                                            <a data-toggle="collapse" data-target="#collapseOne">Phân loại</a>
+                                        </div>
+                                        <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                            <div class="card-body">
+                                                <ul>
+                                                <th:block th:each="item : ${listCategory}">
+<li>
+    <a th:href="|/public/shop?page=${ssPage}&categoryName=${item}&search=${search}|">
+        [[${item}]]
+    </a>
+</li>
+                                                </th:block>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                               
+                                
+                                </div>
+                            </div>
+                        </div>
+                       
+                  
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-9">
+                    <div class="row">
+                   <th:block th:each="product : ${listP}">
+                   	 <div class="col-lg-4 col-md-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" th:data-setbg="@{${product[1]}}">
+                                    <div  th:class="${product[5]} >0 ? 'label new ' : 'label stockout'"
+                                     th:text="${product[5]} > 0 ? 'Còn hàng' : 'Hết hàng'" th:style="${product[5]} > 0 ? '' : 'color : red'" ></div>
+                                    <ul class="product__hover">
+                                        <li><a th:href="${product[1]}" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                                        <li><a th:href="|shop/product-details/${product[0]}|"><span class="icon_bag_alt"></span></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="#" >[[${product[2]}]]</a></h6>
+                                    <div class="rating">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    [[${product[4]}]]
+                                       Lượt mua
+                                    </div>
+                                    <th:block th:if="${product[8]} > ${product[7]}">
+                                    <div class="product__price" style="color: gray" name="price"> <del>
+    [[${#numbers.formatDecimal(product[8], 0, 'COMMA', 0, 'POINT')}+' VND']]</del>
+</div> 
+</th:block >
+<th:block th:if="${product[7]} > ${product[6]}">
+<div class="product__price" style="color: red" name="price">
+    [[${#numbers.formatDecimal(product[6], 0, 'COMMA', 0, 'POINT')}+' VND'+ ' - ' + ${#numbers.formatDecimal(product[7], 0, 'COMMA', 0, 'POINT')}+' VND']]
+</div>
+</th:block>
+<th:block th:unless="${product[7]} > ${product[6]}">
+<div class="product__price" style="color: red" name="price">
+    [[${#numbers.formatDecimal(product[6], 0, 'COMMA', 0, 'POINT')}+' VND']]
+</div>
+</th:block>
+                                </div>
+                            </div>
+                        </div>
+                   </th:block>
+                        <div class="col-lg-12 text-center">
+                            <div class="pagination__option">
+                           <a th:href="|/public/shop?page=0&categoryName=${category}&search=${search}|" th:class="${ssPage} == 0 ? 'disabled' : '' " ><i class="fa fa-angle-double-left"></i></a>
+                           		<a th:href="|/public/shop?page=${ssPage-1}&categoryName=${category}&search=${search}|" th:class="${ssPage} == 0 ? 'disabled' : '' " ><i class="fa fa-angle-left"></i></a>                            
+                                <a thhref="|/public/shop?page=${ssPage}&categoryName=${category}&search=${search}|">[[${ssPage}+1]]</a>
+                                <a th:href="|/public/shop?page=${ssPage+1}&categoryName=${category}&search=${search}" th:class="${ssPage} == ${totalPage-1} ? 'disabled' : '' " ><i class="fa fa-angle-right"></i></a>
+                                 <a th:href="|/public/shop?page=${totalPage-1}&categoryName=${category}&search=${search}|" th:class="${ssPage} == ${totalPage-1} ? 'disabled' : '' "> <i class="fa fa-angle-double-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shop Section End -->
+
+
+
+</html>
+  <style>
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+</style>
+
