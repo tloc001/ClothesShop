@@ -36,8 +36,6 @@ public class ProductService {
 	public Product saveProduct(Product p) {	
 //			nếu chưa thì lưu vào và get ra
 			return	productRepository.save(p);
-
-	
 	}
 	public List<String[]> findName(){
 		return productRepository.findName();

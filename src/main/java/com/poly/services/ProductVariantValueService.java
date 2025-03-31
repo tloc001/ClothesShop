@@ -31,10 +31,8 @@ public class ProductVariantValueService {
 	}
 	@Transactional
 	public void deletePvv(Integer idPvv) {
-		
 				cartItemService.updateCartItemWhenDeletePvv(idPvv);
 				repository.deleteById(idPvv);
-			
 	}
 	public void deleteAllPvv(Integer id) {
 		repository.DeleteAllProductById(id);

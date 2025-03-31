@@ -20,12 +20,14 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		System.out.println("vao filter truoc");
 		// Cấu hình bảo mật
 		http.csrf(csrf -> csrf.disable()).sessionManagement(ses -> ses.sessionFixation().none())
 				.authorizeHttpRequests(auth ->auth.requestMatchers("/public/**").permitAll()
 						.requestMatchers("/checkout/**").authenticated()
 						.requestMatchers("/user/**").authenticated()
-						.requestMatchers("/admin/**").hasAuthority("ADMIN").anyRequest().authenticated())
+						.requestMatchers("/admin/**").hasAuthority("ADMIN")
+						.anyRequest().authenticated())
 			
 				.formLogin(login -> login.loginPage("/public/login")
 						.failureHandler(new CustomAuthenticationFailureHandler()).loginProcessingUrl("/logon")
