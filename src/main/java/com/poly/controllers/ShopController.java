@@ -61,8 +61,8 @@ public class ShopController {
 	public int getSessionCart() {
 	    return sessionCartService.getCount();
 	}
-	
-	
+
+
 	@ModelAttribute("user")
     public String checkLogin(@AuthenticationPrincipal CustomUserDetails userDetails) {
         return userDetails != null ? "Xin chào : " + userDetails.getFullname()+ " !" : "";

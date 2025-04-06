@@ -131,7 +131,7 @@
                     <div class="cart__total__procced">
                         <h6>Cart total</h6> <strong style="color: red"><span  id="total-price">0</span> VND </strong> 
                         
-                        <button formaction="/checkout/" class="btn primary-btn mt-3">Tiến tới thanh toán</button>
+                        <button formaction="/checkout/" id="checkout" class="btn primary-btn mt-3">Tiến tới thanh toán</button>
                     </div>
                 </div>
             </div>
@@ -174,7 +174,7 @@ console.log(inta)
         const selectAll = document.getElementById("select-all");
         const checkboxes = document.querySelectorAll(".product-checkbox");
         const totalPriceElement = document.getElementById("total-price");
-
+        const checkoutButton = document.getElementById("checkout");
         function updateTotal() {
             let total = 0;
             checkboxes.forEach(checkbox => {
