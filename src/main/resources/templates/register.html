@@ -82,9 +82,9 @@ body {
             </div>
             <div class="error-message" id="error-message">Mật khẩu không khớp!</div>
         </div>
-        <button type="submit" class="btn btn-custom w-100">Đăng Ký</button>
+        <button type="submit" id="submit" class="btn btn-custom w-100">Đăng Ký</button>
     </form>
-    [[${message}]]
+   <p> [[${message}]]</p>
     <div class="text-center mt-3">
         <a th:href="@{/public/login}" class="text-decoration-none">Đã có tài khoản? Đăng nhập</a>
     </div>
@@ -98,7 +98,7 @@ body {
         const errorMessage = document.getElementById('error-message');
 
         if (password !== repassword) {
-            errorMessage.style.displayerrorMessage.style.display = 'block'; // Hiện thông báo lỗi
+            errorMessage.style.display = 'block';
             return false; // Ngăn không cho form được gửi
         } else {
             errorMessage.style.display = 'none'; // Ẩn thông báo lỗi
